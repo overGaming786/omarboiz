@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>omar.boiz Japanese Learning</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Inter and Noto Sans JP -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        jp: ['Noto Sans JP', 'sans-serif'],
+                    },
+                    colors: {
+                        japan: {
+                            red: '#BC002D',
+                            dark: '#1A1A24',
+                            light: '#F8F9FA'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F9FA;
+            color: #1A1A24;
+        }
+        .font-jp {
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        /* Flashcard Flip Animation */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #BC002D; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #900022; 
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-effect border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="w-8 h-8 rounded-full bg-japan-red flex items-center justify-center text-white font-bold">
+                        O
+                    </div>
+                    <span class="font-bold text-xl tracking-tight">omar.boiz <span class="text-japan-red">Japanese</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#kana" class="text-gray-700 hover:text-japan-red transition px-3 py-2 rounded-md font-medium">Alphabet</a>
+                    <a href="#vocab" class="text-gray-700 hover:text-japan-red transition px-3 py-2 rounded-md font-medium">Vocabulary</a>
+                    <a href="#quiz" class="text-gray-700 hover:text-japan-red transition px-3 py-2 rounded-md font-medium">Quiz</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-4 text-center bg-gradient-to-b from-white to-gray-100">
+        <div class="max-w-4xl mx-auto">
+            <div class="inline-block p-2 px-4 rounded-full bg-red-100 text-japan-red font-semibold text-sm mb-6 shadow-sm border border-red-200">
+                <i class="fas fa-star mr-2"></i> Pro Learning Platform
+            </div>
+            <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 mb-6">
+                Master Japanese with <br/> <span class="text-japan-red">omar.boiz</span>
+            </h1>
+            <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+                Start your journey from absolute zero to fluency. Learn alphabets, vocabulary, and test your knowledge interactively.
+            </p>
+            <div class="flex justify-center gap-4">
+                <a href="#kana" class="px-8 py-3 bg-japan-red text-white font-bold rounded-lg shadow-lg hover:bg-red-800 transition transform hover:-translate-y-1">
+                    Start Learning <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kana Section (Hiragana/Katakana) -->
+    <section id="kana" class="py-20 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Japanese Alphabet (Kana)</h2>
+                <p class="text-gray-600">Click on any character to hear its pronunciation.</p>
+                
+                <!-- Toggle -->
+                <div class="flex justify-center mt-6">
+                    <div class="bg-gray-200 p-1 rounded-lg inline-flex">
+                        <button id="btn-hiragana" onclick="setKana('hiragana')" class="px-6 py-2 rounded-md font-bold text-sm bg-white shadow-sm text-japan-red transition">Hiragana</button>
+                        <button id="btn-katakana" onclick="setKana('katakana')" class="px-6 py-2 rounded-md font-bold text-sm text-gray-500 hover:text-gray-700 transition">Katakana</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kana Grid -->
+            <div id="kana-grid" class="grid grid-cols-5 sm:grid-cols-5 md:grid-cols-5 lg:grid-cols-10 gap-3 md:gap-4">
+                <!-- Dynamically populated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Vocabulary Flashcards -->
+    <section id="vocab" class="py-20 px-4 bg-gray-900 text-white">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Essential Vocabulary</h2>
+                <p class="text-gray-400">Hover or tap on the cards to flip them. Click the speaker icon to listen.</p>
+            </div>
+
+            <div id="vocab-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Dynamically populated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Mini Quiz -->
+    <section id="quiz" class="py-20 px-4">
+        <div class="max-w-3xl mx-auto">
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+                <div class="bg-japan-red p-6 text-center text-white">
+                    <h2 class="text-2xl font-bold"><i class="fas fa-gamepad mr-2"></i> Knowledge Check</h2>
+                    <p class="opacity-90 mt-1">Test what you've learned so far!</p>
+                </div>
+                
+                <div id="quiz-container" class="p-8">
+                    <!-- Quiz Content dynamically loaded -->
+                    <div id="quiz-start" class="text-center py-10">
+                        <i class="fas fa-brain text-6xl text-gray-300 mb-4"></i>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Ready for the test?</h3>
+                        <button onclick="startQuiz()" class="px-8 py-3 bg-gray-900 text-white font-bold rounded-lg shadow hover:bg-gray-800 transition">
+                            Start Quiz
+                        </button>
+                    </div>
+                    
+                    <div id="quiz-active" class="hidden">
+                        <div class="flex justify-between items-center mb-6 text-sm font-semibold text-gray-500">
+                            <span id="quiz-progress">Question 1/5</span>
+                            <span id="quiz-score">Score: 0</span>
+                        </div>
+                        <h3 id="quiz-question" class="text-2xl font-bold text-gray-800 mb-6 font-jp">Question text here?</h3>
+                        <div id="quiz-options" class="space-y-3">
+                            <!-- Options injected here -->
+                        </div>
+                    </div>
+
+                    <div id="quiz-result" class="hidden text-center py-10">
+                        <div id="result-icon" class="text-6xl mb-4"></div>
+                        <h3 class="text-3xl font-bold text-gray-800 mb-2">Quiz Completed!</h3>
+                        <p id="result-text" class="text-xl text-gray-600 mb-6">You scored 3 out of 5.</p>
+                        <button onclick="resetQuiz()" class="px-8 py-3 bg-japan-red text-white font-bold rounded-lg shadow hover:bg-red-800 transition">
+                            Try Again
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 border-t border-gray-200 py-10 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-gray-500 font-medium">
+                © 2026 omar.boiz Japanese Learning. Created with ❤️ for aspiring learners.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Application Logic -->
+    <script>
+        // --- DATA ---
+        
+        // Full Kana Array Added Here
+        const kanaData = [
+            // A Row
+            { r: 'a', h: 'あ', k: 'ア' }, { r: 'i', h: 'い', k: 'イ' }, { r: 'u', h: 'う', k: 'ウ' }, { r: 'e', h: 'え', k: 'エ' }, { r: 'o', h: 'お', k: 'オ' },
+            // K Row
+            { r: 'ka', h: 'か', k: 'カ' }, { r: 'ki', h: 'き', k: 'キ' }, { r: 'ku', h: 'く', k: 'ク' }, { r: 'ke', h: 'け', k: 'ケ' }, { r: 'ko', h: 'こ', k: 'コ' },
+            // S Row
+            { r: 'sa', h: 'さ', k: 'サ' }, { r: 'shi', h: 'し', k: 'シ' }, { r: 'su', h: 'す', k: 'ス' }, { r: 'se', h: 'せ', k: 'セ' }, { r: 'so', h: 'そ', k: 'ソ' },
+            // T Row
+            { r: 'ta', h: 'た', k: 'タ' }, { r: 'chi', h: 'ち', k: 'チ' }, { r: 'tsu', h: 'つ', k: 'ツ' }, { r: 'te', h: 'て', k: 'テ' }, { r: 'to', h: 'と', k: 'ト' },
+            // N Row
+            { r: 'na', h: 'な', k: 'ナ' }, { r: 'ni', h: 'に', k: 'ニ' }, { r: 'nu', h: 'ぬ', k: 'ヌ' }, { r: 'ne', h: 'ね', k: 'ネ' }, { r: 'no', h: 'の', k: 'ノ' },
+            // H Row
+            { r: 'ha', h: 'は', k: 'ハ' }, { r: 'hi', h: 'ひ', k: 'ヒ' }, { r: 'fu', h: 'ふ', k: 'フ' }, { r: 'he', h: 'へ', k: 'ヘ' }, { r: 'ho', h: 'ほ', k: 'ホ' },
+            // M Row
+            { r: 'ma', h: 'ま', k: 'マ' }, { r: 'mi', h: 'み', k: 'ミ' }, { r: 'mu', h: 'む', k: 'ム' }, { r: 'me', h: 'め', k: 'メ' }, { r: 'mo', h: 'も', k: 'モ' },
+            // Y Row (has empty spaces for grid alignment)
+            { r: 'ya', h: 'や', k: 'ヤ' }, { r: '', h: '', k: '' }, { r: 'yu', h: 'ゆ', k: 'ユ' }, { r: '', h: '', k: '' }, { r: 'yo', h: 'よ', k: 'ヨ' },
+            // R Row
+            { r: 'ra', h: 'ら', k: 'ラ' }, { r: 'ri', h: 'り', k: 'リ' }, { r: 'ru', h: 'る', k: 'ル' }, { r: 're', h: 'れ', k: 'レ' }, { r: 'ro', h: 'ろ', k: 'ロ' },
+            // W Row & N
+            { r: 'wa', h: 'わ', k: 'ワ' }, { r: '', h: '', k: '' }, { r: '', h: '', k: '' }, { r: 'wo', h: 'を', k: 'ヲ' }, { r: 'n', h: 'ん', k: 'ン' }
+        ];
+
+        // Vocabulary
+        const vocabData = [
+            { en: 'Hello / Good Afternoon', ja: 'こんにちは', r: 'Konnichiwa' },
+            { en: 'Thank you', ja: 'ありがとう', r: 'Arigatou' },
+            { en: 'Goodbye', ja: 'さようなら', r: 'Sayounara' },
+            { en: 'Yes', ja: 'はい', r: 'Hai' },
+            { en: 'No', ja: 'いいえ', r: 'Iie' },
+            { en: 'Excuse me / Sorry', ja: 'すみません', r: 'Sumimasen' },
+            { en: 'Delicious', ja: 'おいしい', r: 'Oishii' },
+            { en: 'Cute', ja: 'かわいい', r: 'Kawaii' },
+            { en: 'Water', ja: 'みず', r: 'Mizu' }
+        ];
+
+        // Quiz Questions
+        const quizData = [
+            {
+                q: 'What does "Konnichiwa" mean?',
+                options: ['Thank you', 'Goodbye', 'Hello', 'Yes'],
+                ans: 2
+            },
+            {
+                q: 'Which character is "A" in Hiragana?',
+                options: ['お', 'あ', 'い', 'え'],
+                ans: 1
+            },
+            {
+                q: 'How do you say "Thank you" in Japanese?',
+                options: ['Arigatou', 'Sayounara', 'Sumimasen', 'Hai'],
+                ans: 0
+            },
+            {
+                q: 'What is the Romaji for "みず"?',
+                options: ['Neko', 'Inu', 'Mizu', 'Kawa'],
+                ans: 2
+            },
+            {
+                q: 'Which character is "Ka" in Katakana?',
+                options: ['カ', 'キ', 'ク', 'ケ'],
+                ans: 0
+            }
+        ];
+
+        // --- STATE ---
+        let currentKana = 'hiragana';
+        let currentQuizIndex = 0;
+        let score = 0;
+
+        // --- FUNCTIONS ---
+
+        // Text-to-Speech (Pronunciation)
+        function speak(text) {
+            if (!text) return; // Ignore empty slots
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'ja-JP';
+                utterance.rate = 0.9; // Slightly slower for learning
+                window.speechSynthesis.speak(utterance);
+            } else {
+                console.log("Speech Synthesis not supported in this browser.");
+            }
+        }
+
+        // Render Kana Grid
+        function renderKana() {
+            const grid = document.getElementById('kana-grid');
+            grid.innerHTML = '';
+            
+            kanaData.forEach(item => {
+                const char = currentKana === 'hiragana' ? item.h : item.k;
+                
+                const card = document.createElement('div');
+                
+                // If it's an empty slot (for Y and W rows alignment)
+                if(!char) {
+                    card.className = 'p-4';
+                    grid.appendChild(card);
+                    return;
+                }
+
+                card.className = 'bg-white border border-gray-200 rounded-xl p-4 text-center cursor-pointer hover:shadow-md hover:border-japan-red transition transform hover:-translate-y-1 active:scale-95';
+                card.onclick = () => speak(char);
+                
+                card.innerHTML = `
+                    <div class="text-4xl font-jp text-gray-800 mb-2">${char}</div>
+                    <div class="text-sm font-medium text-japan-red uppercase tracking-widest">${item.r}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Toggle Kana Type
+        function setKana(type) {
+            currentKana = type;
+            const btnHira = document.getElementById('btn-hiragana');
+            const btnKata = document.getElementById('btn-katakana');
+
+            if (type === 'hiragana') {
+                btnHira.className = 'px-6 py-2 rounded-md font-bold text-sm bg-white shadow-sm text-japan-red transition';
+                btnKata.className = 'px-6 py-2 rounded-md font-bold text-sm text-gray-500 hover:text-gray-700 transition bg-transparent shadow-none';
+            } else {
+                btnKata.className = 'px-6 py-2 rounded-md font-bold text-sm bg-white shadow-sm text-japan-red transition';
+                btnHira.className = 'px-6 py-2 rounded-md font-bold text-sm text-gray-500 hover:text-gray-700 transition bg-transparent shadow-none';
+            }
+            renderKana();
+        }
+
+        // Render Vocabulary
+        function renderVocab() {
+            const grid = document.getElementById('vocab-grid');
+            grid.innerHTML = '';
+
+            vocabData.forEach(item => {
+                const cardContainer = document.createElement('div');
+                cardContainer.className = 'perspective-1000 w-full h-48 group cursor-pointer';
+                
+                cardContainer.innerHTML = `
+                    <div class="relative w-full h-full transform-style-3d group-hover:rotate-y-180 duration-500">
+                        <!-- Front of Card (English) -->
+                        <div class="absolute w-full h-full backface-hidden bg-gray-800 border border-gray-700 rounded-2xl p-6 flex flex-col justify-center items-center shadow-lg">
+                            <span class="text-gray-400 text-sm font-semibold tracking-wider uppercase mb-2">English</span>
+                            <h3 class="text-2xl font-bold text-center">${item.en}</h3>
+                            <i class="fas fa-sync-alt text-gray-600 mt-4 text-sm"></i>
+                        </div>
+                        
+                        <!-- Back of Card (Japanese) -->
+                        <div class="absolute w-full h-full backface-hidden rotate-y-180 bg-japan-red rounded-2xl p-6 flex flex-col justify-center items-center shadow-lg text-white">
+                            <button onclick="event.stopPropagation(); speak('${item.ja}')" class="absolute top-4 right-4 text-white hover:text-gray-200 bg-white/20 p-2 rounded-full h-10 w-10 flex items-center justify-center transition">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                            <span class="text-red-200 text-sm font-semibold tracking-wider uppercase mb-2">Japanese</span>
+                            <h3 class="text-4xl font-jp font-bold mb-2">${item.ja}</h3>
+                            <p class="text-lg opacity-90 tracking-wide">${item.r}</p>
+                        </div>
+                    </div>
+                `;
+                
+                // Add touch support to flip
+                let isFlipped = false;
+                cardContainer.onclick = function() {
+                    const inner = this.querySelector('.transform-style-3d');
+                    isFlipped = !isFlipped;
+                    if(isFlipped) {
+                        inner.style.transform = 'rotateY(180deg)';
+                    } else {
+                        inner.style.transform = 'rotateY(0deg)';
+                    }
+                };
+
+                grid.appendChild(cardContainer);
+            });
+        }
+
+        // --- QUIZ LOGIC (FIXED) ---
+        function startQuiz() {
+            document.getElementById('quiz-start').classList.add('hidden');
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-active').classList.remove('hidden');
+            currentQuizIndex = 0;
+            score = 0;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const qData = quizData[currentQuizIndex];
+            document.getElementById('quiz-progress').innerText = `Question ${currentQuizIndex + 1}/${quizData.length}`;
+            document.getElementById('quiz-score').innerText = `Score: ${score}`;
+            document.getElementById('quiz-question').innerText = qData.q;
+            
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            
+            qData.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left p-4 rounded-xl border-2 border-gray-100 hover:border-japan-red hover:bg-red-50 transition font-medium text-gray-700 bg-white shadow-sm';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, btnElement) {
+            const correctIndex = quizData[currentQuizIndex].ans;
+            const allButtons = document.getElementById('quiz-options').children;
+            
+            // Disable all buttons
+            for(let b of allButtons) {
+                b.disabled = true;
+                b.classList.remove('hover:border-japan-red', 'hover:bg-red-50', 'cursor-pointer');
+            }
+
+            if (selectedIndex === correctIndex) {
+                btnElement.classList.add('border-green-500', 'bg-green-50', 'text-green-800');
+                btnElement.innerHTML += ' <i class="fas fa-check-circle float-right mt-1 text-green-500"></i>';
+                score++;
+                document.getElementById('quiz-score').innerText = `Score: ${score}`;
+            } else {
+                btnElement.classList.add('border-red-500', 'bg-red-50', 'text-red-800');
+                btnElement.innerHTML += ' <i class="fas fa-times-circle float-right mt-1 text-red-500"></i>';
+                
+                // Show correct answer
+                allButtons[correctIndex].classList.add('border-green-500', 'bg-green-50');
+            }
+
+            // Move to next after a delay
+            setTimeout(() => {
+                currentQuizIndex++;
+                if (currentQuizIndex < quizData.length) {
+                    loadQuestion();
+                } else {
+                    showResult();
+                }
+            }, 1500);
+        }
+
+        function showResult() {
+            document.getElementById('quiz-active').classList.add('hidden');
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.classList.remove('hidden');
+            
+            const icon = document.getElementById('result-icon');
+            const text = document.getElementById('result-text');
+            
+            text.innerText = `You scored ${score} out of ${quizData.length}.`;
+            
+            if (score === quizData.length) {
+                icon.innerHTML = '<i class="fas fa-crown text-yellow-500"></i>';
+            } else if (score > quizData.length / 2) {
+                icon.innerHTML = '<i class="fas fa-star text-blue-500"></i>';
+            } else {
+                icon.innerHTML = '<i class="fas fa-book-open text-gray-500"></i>';
+            }
+        }
+
+        function resetQuiz() {
+            startQuiz();
+        }
+
+        // Initialize App on Load
+        window.onload = () => {
+            renderKana();
+            renderVocab();
+        };
+    </script>
+</body>
+</html>
